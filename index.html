@@ -143,7 +143,7 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // 전세계 핀 데이터 30개 이상
+    // 핀 데이터 30개
     const pins = [
       {name: "우크라이나", lat: 48.3794, lng: 31.1656, info: "러시아와 전쟁 중임. 민간인 피해 큼. 국제사회 중재 실패 중."},
       {name: "멕시코", lat: 23.6345, lng: -102.5528, info: "마약 카르텔 활개 침. 군과 충돌 잦음. 관광지 인근도 위험함."},
@@ -183,27 +183,23 @@
         .bindPopup("📍 <b>" + p.name + "</b><br>" + p.info);
     });
 
-    // 2023년 이후, 네이버 및 신뢰 가능한 출처 링크
+    // 최신 뉴스 - 네이버 출처
     const newsList = [
-      ["우크라이나 전쟁 2023년 최신 상황 업데이트", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011400562"],
-      ["미국 총기 사고 현황 및 대응책", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003737224"],
-      ["브라질 갱단 세력 확장과 정부 대책", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002580776"],
-      ["중국 사이버 스파이 활동 국제적 우려", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014087077"],
-      ["필리핀 마약 단속과 인권 논란", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006785678"],
-      ["아프가니스탄 인권 문제 및 여성 교육 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003772132"],
-      ["이란 시위 및 인권 탄압 최근 동향", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000951327"],
-      ["멕시코 마약 카르텔과 군 충돌 심화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"],
-      ["남아프리카공화국 범죄 급증 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000953401"],
-      ["프랑스 반정부 시위와 경찰 폭력 논란", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002584752"]
+      ["우크라이나 전쟁 2023년 최신 상황 업데이트", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011418747"],
+      ["미국 총기 폭력 문제 심각성 고조", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=081&aid=0003329997"],
+      ["브라질 갱단 세력 확장 및 대응 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003736821"],
+      ["중국 사이버 스파이 활동과 국제 사회 반응", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=015&aid=0004803926"],
+      ["필리핀 마약 단속과 인권 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=032&aid=0003171505"],
+      ["아프가니스탄 탈레반 인권 탄압 심화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006405411"]
     ];
 
     const riskList = [
-      ["프랑스 반정부 시위 격화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002584752"],
-      ["남아공 강력범죄 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000953401"],
-      ["멕시코 마약전쟁 계속", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"],
-      ["이란 내부 불만 폭발", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000951327"],
-      ["인도 보이스피싱 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=018&aid=0005483486"],
-      ["러-우크라 접경 포격", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003771234"],
+      ["프랑스 반정부 시위 격화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011425674"],
+      ["남아프리카공화국 강력범죄 급증", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=031&aid=0000738504"],
+      ["멕시코 마약 카르텔과 정부 충돌", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=422&aid=0000569918"],
+      ["이란 국내 시위 및 불만 폭발", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006399223"],
+      ["인도 보이스피싱 피해 급증", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=018&aid=0005483486"],
+      ["러시아-우크라이나 국경 포격 사건", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003771234"],
       ["터키 테러 및 난민 문제 지속", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014087890"],
       ["캐나다 갱단 및 조직범죄 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014089900"],
       ["미국 보이스피싱 및 총기 폭력 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003780001"],
@@ -214,6 +210,7 @@
       return arr.sort(() => Math.random() - 0.5);
     }
 
+    // 뉴스 업데이트
     function updateNews() {
       const newsEl = document.getElementById("news-list");
       newsEl.innerHTML = "";
@@ -235,27 +232,28 @@
     updateNews();
     setInterval(updateNews, 15000);
 
+    // 퀴즈 문제 3개 (O/X)
     const questions = shuffle([
       {
         q: "브라질의 범죄율은 낮아졌다. (O/X)",
         correct: false,
         correctText: "정답은 X! 브라질 갱단 범죄율은 상승 중임.",
         explanation: "브라질 갱단은 교도소 내부까지 확장하며 총기 사용도 증가함.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002580776"
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003736821"
       },
       {
         q: "아프가니스탄은 여성 교육을 허용한다. (O/X)",
         correct: false,
         correctText: "정답은 X! 여성 교육은 제한되고 있음.",
         explanation: "탈레반 정권 이후 여성 교육이 금지되어 국제적으로 비난받고 있음.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003772132"
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006405411"
       },
       {
         q: "멕시코 마약 카르텔은 군과 충돌 중이다. (O/X)",
         correct: true,
         correctText: "정답은 O! 마약 조직과 군 간 충돌이 계속됨.",
         explanation: "멕시코 정부는 마약 카르텔 단속을 강화하고 있음.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=422&aid=0000569918"
       }
     ]).slice(0, 3);
 
@@ -289,7 +287,7 @@
 
     document.getElementById("quiz-question").textContent = questions[0].q;
 
-    // 모달 열기/닫기
+    // 모달 열기/닫기 기능
     const newsModal = document.getElementById('news-modal');
     const riskModal = document.getElementById('risk-modal');
 
