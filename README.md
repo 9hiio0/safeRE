@@ -1,2 +1,45 @@
 # safeRE
 세계를 안전하게, SAFAREA와 함께
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SAFARE - 위험국가 지도</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; }
+    #map { height: 100vh; }
+    .leaflet-popup-content { font-size: 14px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map').setView([20, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var dangerCountries = [
+      { name: "아프가니스탄", lat: 33.9391, lng: 67.7100 },
+      { name: "수단", lat: 15.1521, lng: 46.1996 },
+      { name: "시리아", lat: 34.8021, lng: 38.9968 },
+      { name: "예멘", lat: 23.6345, lng: -102.5528 },
+      { name: "말리", lat: 6.0770, lng: 31.3070 },
+      { name: "에티오피아", lat: 15.5527, lng: 48.5164 },
+      { name: "우크라이나", lat: 48.3794, lng: 31.1656 },
+      { name: "이란", lat: 32.4279, lng: 43.0793 },
+      { name: "니제르", lat: 17.6078, lng: 8.0817 },
+      { name: "나이지리아", lat: 9.0820, lng: 8.6753 }
+    ];
+
+    dangerCountries.forEach(function(country) {
+      L.marker([country.lat, country.lng])
+        .addTo(map)
+        .bindPopup("<b>" + country.name + "</b><br>위험 가능성 높음.");
+    });
+  </script>
+</body>
+</html>
