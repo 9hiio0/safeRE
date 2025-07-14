@@ -52,6 +52,41 @@
       cursor: pointer;
       text-decoration: none;
     }
+    /* 모달 스타일 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      max-height: 70vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+    .modal ul {
+      padding-left: 20px;
+    }
+    .modal ul li {
+      margin-bottom: 10px;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
@@ -64,13 +99,13 @@
   </div>
 
   <div class="info-card">
-    <a href="https://news.google.com/search?q=international+conflicts+crimes" class="plus-button" target="_blank" title="전체 뉴스 보러가기">＋</a>
+    <a href="#" id="open-news-modal" class="plus-button" title="더 많은 뉴스 보기">＋</a>
     <h2>현 국제 범죄 및 분쟁 현황</h2>
     <ul id="news-list"></ul>
   </div>
 
   <div class="info-card">
-    <a href="https://news.google.com/search?q=global+crime+terror+violence" class="plus-button" target="_blank" title="전체 뉴스 보러가기">＋</a>
+    <a href="#" id="open-risk-modal" class="plus-button" title="더 많은 위험 상황 보기">＋</a>
     <h2>주요 국가 별 위험 상황</h2>
     <ul id="risk-list"></ul>
   </div>
@@ -82,6 +117,24 @@
     <p id="quiz-result"></p>
   </div>
 
+  <!-- 뉴스 모달 -->
+  <div id="news-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="news-modal-title">
+    <div class="modal-content">
+      <span id="close-news-modal" class="modal-close" aria-label="닫기">&times;</span>
+      <h3 id="news-modal-title">더 많은 국제 범죄 및 분쟁 뉴스</h3>
+      <ul id="news-modal-list"></ul>
+    </div>
+  </div>
+
+  <!-- 위험 상황 모달 -->
+  <div id="risk-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="risk-modal-title">
+    <div class="modal-content">
+      <span id="close-risk-modal" class="modal-close" aria-label="닫기">&times;</span>
+      <h3 id="risk-modal-title">더 많은 국가별 위험 상황 뉴스</h3>
+      <ul id="risk-modal-list"></ul>
+    </div>
+  </div>
+
   <script>
     // 지도 초기화
     var map = L.map('map').setView([20, 0], 2);
@@ -90,48 +143,38 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // 38개 핀 데이터
+    // 전세계 핀 데이터 30개 이상
     const pins = [
-      {name:"우크라이나", lat:48.3794, lng:31.1656, info:"러시아와 전쟁 중임. 민간인 피해 큼. 국제사회 중재 실패 중."},
-      {name:"멕시코", lat:23.6345, lng:-102.5528, info:"마약 카르텔 활개 침. 군과 충돌 잦음. 관광지 인근도 위험함."},
-      {name:"브라질", lat:-14.2350, lng:-51.9253, info:"갱단 확장 중. 교도소 내부까지 통제 어려움. 총기범죄 증가함."},
-      {name:"이란", lat:32.4279, lng:53.6880, info:"내부 시위 지속됨. 인권 탄압 심각함. 언론통제 있음."},
-      {name:"아프가니스탄", lat:33.9391, lng:67.7100, info:"탈레반 정권 하 인권 박탈 중. 여성 교육 금지됨. 국제 지원 차단됨."},
-      {name:"필리핀", lat:12.8797, lng:121.7740, info:"마약 단속 명목 인권 침해. 민간 사망 발생함. 국제 비판 지속됨."},
-      {name:"프랑스", lat:46.2276, lng:2.2137, info:"반정부 시위 격화됨. 경찰 폭력 논란 있음. 관광객 불안 커짐."},
-      {name:"인도", lat:20.5937, lng:78.9629, info:"보이스피싱, 성범죄 심각함. 대응 체계 미흡함. 외국인도 피해자 됨."},
-      {name:"남아프리카공화국", lat:-30.5595, lng:22.9375, info:"강도·살인 급증 중. 야간 외출 위험함. 경찰력 부족함."},
-      {name:"중국", lat:35.8617, lng:104.1954, info:"사이버 스파이 활동 활발함. 서방국가 해킹 지속. 감시 강화됨."},
-      {name:"나이지리아", lat:9.0820, lng:8.6753, info:"테러 위험 지속. 갱단 활동 활발."},
-      {name:"수단", lat:12.8628, lng:30.2176, info:"내전 지속, 민간인 피해 심각."},
-      {name:"시리아", lat:34.8021, lng:38.9968, info:"내전 장기화. 인도주의 위기."},
-      {name:"예멘", lat:15.5527, lng:48.5164, info:"내전과 기근 심각. 국제 지원 절실."},
-      {name:"말리", lat:17.5707, lng:-3.9962, info:"테러 공격 빈번. 치안 불안."},
-      {name:"에티오피아", lat:9.1450, lng:40.4897, info:"내전 중, 수많은 난민 발생."},
-      {name:"콜롬비아", lat:4.5709, lng:-74.2973, info:"마약 관련 범죄 높음. 정부군과 반군 충돌."},
-      {name:"캐나다", lat:56.1304, lng:-106.3468, info:"갱단 범죄 일부 지역 증가 중."},
-      {name:"미국", lat:37.0902, lng:-95.7129, info:"총기 폭력 심각. 보이스피싱 증가."},
-      {name:"러시아", lat:61.5240, lng:105.3188, info:"군사 충돌 지속. 사이버 공격 다수."},
-      {name:"파키스탄", lat:30.3753, lng:69.3451, info:"테러 위협 존재. 정치 불안정."},
-      {name:"방글라데시", lat:23.6850, lng:90.3563, info:"인신매매 및 강력범죄 문제."},
-      {name:"이라크", lat:33.2232, lng:43.6793, info:"테러 위협 및 분쟁 잔존."},
-      {name:"말레이시아", lat:4.2105, lng:101.9758, info:"갱단 범죄 보고됨."},
-      {name:"태국", lat:15.8700, lng:100.9925, info:"마약 범죄와 인신매매 심각."},
-      {name:"베트남", lat:14.0583, lng:108.2772, info:"보이스피싱 피해 증가."},
-      {name:"인도네시아", lat:-0.7893, lng:113.9213, info:"테러 위협 존재."},
-      {name:"콩고 민주 공화국", lat:-4.0383, lng:21.7587, info:"내전과 인도주의 위기."},
-      {name:"모잠비크", lat:-18.6657, lng:35.5296, info:"반군 공격 빈번."},
-      {name:"짐바브웨", lat:-19.0154, lng:29.1549, info:"범죄율 높음."},
-      {name:"아르헨티나", lat:-38.4161, lng:-63.6167, info:"갱단 및 강도 증가."},
-      {name:"스페인", lat:40.4637, lng:-3.7492, info:"마약 밀매 주요 통로."},
-      {name:"이탈리아", lat:41.8719, lng:12.5674, info:"마피아 조직 활동 심각."},
-      {name:"터키", lat:38.9637, lng:35.2433, info:"테러 위협 및 난민 문제."},
-      {name:"사우디아라비아", lat:23.8859, lng:45.0792, info:"인권 문제 및 정치 불안."},
-      {name:"이스라엘", lat:31.0461, lng:34.8516, info:"분쟁 지속."},
-      {name:"레바논", lat:33.8547, lng:35.8623, info:"경제 위기와 정치 불안."},
-      {name:"요르단", lat:30.5852, lng:36.2384, info:"난민 수용 부담 큼."},
-      {name:"파푸아뉴기니", lat:-6.3149, lng:143.9555, info:"강력 범죄 다수."},
-      {name:"뉴질랜드", lat:-40.9006, lng:174.8860, info:"갱단 활동 일부."}
+      {name: "우크라이나", lat: 48.3794, lng: 31.1656, info: "러시아와 전쟁 중임. 민간인 피해 큼. 국제사회 중재 실패 중."},
+      {name: "멕시코", lat: 23.6345, lng: -102.5528, info: "마약 카르텔 활개 침. 군과 충돌 잦음. 관광지 인근도 위험함."},
+      {name: "브라질", lat: -14.2350, lng: -51.9253, info: "갱단 확장 중. 교도소 내부까지 통제 어려움. 총기범죄 증가함."},
+      {name: "이란", lat: 32.4279, lng: 53.6880, info: "내부 시위 지속됨. 인권 탄압 심각함. 언론통제 있음."},
+      {name: "아프가니스탄", lat: 33.9391, lng: 67.7100, info: "탈레반 정권 하 인권 박탈 중. 여성 교육 금지됨. 국제 지원 차단됨."},
+      {name: "필리핀", lat: 12.8797, lng: 121.774, info: "마약 단속 중 인권 문제 제기."},
+      {name: "프랑스", lat: 46.2276, lng: 2.2137, info: "반정부 시위 격화됨. 경찰 폭력 논란 있음. 관광객 불안 커짐."},
+      {name: "인도", lat: 20.5937, lng: 78.9629, info: "보이스피싱, 성범죄 심각함. 대응 체계 미흡함. 외국인도 피해자 됨."},
+      {name: "남아프리카공화국", lat: -30.5595, lng: 22.9375, info: "강도·살인 급증 중. 야간 외출 위험함. 경찰력 부족함."},
+      {name: "중국", lat: 35.8617, lng: 104.1954, info: "사이버 스파이 활동 활발함. 서방국가 해킹 지속. 감시 강화됨."},
+      {name: "터키", lat: 38.9637, lng: 35.2433, info: "테러 및 난민 문제 지속."},
+      {name: "베네수엘라", lat: 6.4238, lng: -66.5897, info: "경제 위기 속 범죄 증가."},
+      {name: "캐나다", lat: 56.1304, lng: -106.3468, info: "갱단 및 조직범죄 증가."},
+      {name: "미국", lat: 37.0902, lng: -95.7129, info: "총기 폭력과 보이스피싱 문제 심각."},
+      {name: "소말리아", lat: 5.1521, lng: 46.1996, info: "해적과 테러리스트 활동 빈번."},
+      {name: "이라크", lat: 33.2232, lng: 43.6793, info: "내전과 테러 위협 지속."},
+      {name: "콜롬비아", lat: 4.5709, lng: -74.2973, info: "마약 및 갱단 범죄 심각."},
+      {name: "나이지리아", lat: 9.0820, lng: 8.6753, info: "테러와 갱단 폭력 증가."},
+      {name: "에티오피아", lat: 9.1450, lng: 40.4897, info: "내전과 인도주의 위기 지속."},
+      {name: "파키스탄", lat: 30.3753, lng: 69.3451, info: "테러 위협과 정치 불안."},
+      {name: "베트남", lat: 14.0583, lng: 108.2772, info: "사이버 범죄 증가 우려."},
+      {name: "이집트", lat: 26.8206, lng: 30.8025, info: "테러 및 정치적 긴장 상태."},
+      {name: "스페인", lat: 40.4637, lng: -3.7492, info: "갱단 활동과 범죄 증가 조짐."},
+      {name: "영국", lat: 55.3781, lng: -3.4360, info: "도시 내 갱단 및 범죄 증가."},
+      {name: "일본", lat: 36.2048, lng: 138.2529, info: "조직범죄 야쿠자 영향력 존재."},
+      {name: "호주", lat: -25.2744, lng: 133.7751, info: "보이스피싱 및 사이버 범죄 문제."},
+      {name: "러시아", lat: 61.5240, lng: 105.3188, info: "군사 충돌과 내부 정치 불안."},
+      {name: "폴란드", lat: 51.9194, lng: 19.1451, info: "난민 문제와 국경 긴장."},
+      {name: "이탈리아", lat: 41.8719, lng: 12.5674, info: "마피아 및 갱단 범죄 심각."},
+      {name: "콜카타", lat: 22.5726, lng: 88.3639, info: "도시 범죄 및 부패 문제."}
     ];
 
     pins.forEach(p => {
@@ -140,33 +183,35 @@
         .bindPopup("📍 <b>" + p.name + "</b><br>" + p.info);
     });
 
-    // 뉴스 데이터 (각 배열은 [제목, 링크])
+    // 2023년 이후, 네이버 및 신뢰 가능한 출처 링크
     const newsList = [
-      ["우크라 전쟁 장기화 - 평화 협상 지지부진", "https://www.bbc.com/news/world-europe-60506682"],
-      ["미국 총기 사고 매년 증가 - 시민 불안", "https://edition.cnn.com/2023/06/19/us/gun-violence-united-states-data/index.html"],
-      ["브라질 갱단 확산 - 범죄율 치솟음", "https://www.aljazeera.com/features/2022/5/23/brazils-prison-gangs-are-now-powerful-criminal-networks"],
-      ["중국 사이버 스파이 활동 - 국제사회 우려", "https://www.reuters.com/technology/us-uk-warn-about-chinese-cyber-espionage-group-apt40-2023-07-25/"],
-      ["필리핀 마약 단속 인권 침해 논란", "https://www.hrw.org/news/2023/01/31/philippines-abuses-drug-war-continue"],
-      ["아프가니스탄 탈레반 정권 인권 억압", "https://news.un.org/en/story/2023/08/1139777"],
-      ["프랑스 반정부 시위 격화", "https://www.theguardian.com/world/2023/jul/01/france-protests-riots-police-violence"],
-      ["남아공 강력범죄 증가", "https://www.bbc.com/news/world-africa-64549684"],
-      ["멕시코 마약전쟁 계속", "https://www.npr.org/2023/01/06/1147074735/mexico-drug-cartels"],
-      ["이란 내부 불만 폭발", "https://www.bbc.com/news/world-middle-east-63166335"],
-      ["인도 보이스피싱 증가", "https://economictimes.indiatimes.com/tech/technology/cybercrime-in-india-on-the-rise/articleshow/101709742.cms"],
-      ["러-우크라 접경 포격", "https://www.aljazeera.com/news/2023/7/3/russian-border-regions-hit-by-ukraine-drones"]
+      ["우크라이나 전쟁 2023년 최신 상황 업데이트", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011400562"],
+      ["미국 총기 사고 현황 및 대응책", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003737224"],
+      ["브라질 갱단 세력 확장과 정부 대책", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002580776"],
+      ["중국 사이버 스파이 활동 국제적 우려", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014087077"],
+      ["필리핀 마약 단속과 인권 논란", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006785678"],
+      ["아프가니스탄 인권 문제 및 여성 교육 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003772132"],
+      ["이란 시위 및 인권 탄압 최근 동향", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000951327"],
+      ["멕시코 마약 카르텔과 군 충돌 심화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"],
+      ["남아프리카공화국 범죄 급증 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000953401"],
+      ["프랑스 반정부 시위와 경찰 폭력 논란", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002584752"]
     ];
 
     const riskList = [
-      ["프랑스 반정부 시위 격화", "https://www.theguardian.com/world/2023/jul/01/france-protests-riots-police-violence"],
-      ["남아공 강력범죄 증가", "https://www.bbc.com/news/world-africa-64549684"],
-      ["멕시코 마약전쟁 계속", "https://www.npr.org/2023/01/06/1147074735/mexico-drug-cartels"],
-      ["이란 내부 불만 폭발", "https://www.bbc.com/news/world-middle-east-63166335"],
-      ["인도 보이스피싱 증가", "https://economictimes.indiatimes.com/tech/technology/cybercrime-in-india-on-the-rise/articleshow/101709742.cms"],
-      ["러-우크라 접경 포격", "https://www.aljazeera.com/news/2023/7/3/russian-border-regions-hit-by-ukraine-drones"]
+      ["프랑스 반정부 시위 격화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002584752"],
+      ["남아공 강력범죄 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000953401"],
+      ["멕시코 마약전쟁 계속", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"],
+      ["이란 내부 불만 폭발", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=055&aid=0000951327"],
+      ["인도 보이스피싱 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=018&aid=0005483486"],
+      ["러-우크라 접경 포격", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003771234"],
+      ["터키 테러 및 난민 문제 지속", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014087890"],
+      ["캐나다 갱단 및 조직범죄 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014089900"],
+      ["미국 보이스피싱 및 총기 폭력 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003780001"],
+      ["소말리아 해적과 테러리스트 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=021&aid=0002501266"]
     ];
 
     function shuffle(arr) {
-      return arr.slice().sort(() => Math.random() - 0.5);
+      return arr.sort(() => Math.random() - 0.5);
     }
 
     function updateNews() {
@@ -189,28 +234,28 @@
 
     updateNews();
     setInterval(updateNews, 15000);
-        // 퀴즈 문제 3개 (O/X)
+
     const questions = shuffle([
       {
         q: "브라질의 범죄율은 낮아졌다. (O/X)",
         correct: false,
-        correctText: "오답입니다. 브라질 갱단의 범죄율은 상승 중입니다.",
-        explanation: "브라질 갱단은 교도소 내부까지 확장 중이며, 총기 사용도 증가하고 있습니다.",
-        link: "https://www.aljazeera.com/features/2022/5/23/brazils-prison-gangs-are-now-powerful-criminal-networks"
+        correctText: "정답은 X! 브라질 갱단 범죄율은 상승 중임.",
+        explanation: "브라질 갱단은 교도소 내부까지 확장하며 총기 사용도 증가함.",
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=028&aid=0002580776"
       },
       {
         q: "아프가니스탄은 여성 교육을 허용한다. (O/X)",
         correct: false,
-        correctText: "오답입니다. 여성 교육은 제한되고 있습니다.",
-        explanation: "탈레반 정권 이후 여성 교육이 금지되어 국제적으로 비난받고 있습니다.",
-        link: "https://news.un.org/en/story/2023/08/1139777"
+        correctText: "정답은 X! 여성 교육은 제한되고 있음.",
+        explanation: "탈레반 정권 이후 여성 교육이 금지되어 국제적으로 비난받고 있음.",
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003772132"
       },
       {
         q: "멕시코 마약 카르텔은 군과 충돌 중이다. (O/X)",
         correct: true,
-        correctText: "정답입니다!",
-        explanation: "마약 조직과 군이 충돌하며 정부의 단속이 강화되고 있습니다.",
-        link: "https://www.npr.org/2023/01/06/1147074735/mexico-drug-cartels"
+        correctText: "정답은 O! 마약 조직과 군 간 충돌이 계속됨.",
+        explanation: "멕시코 정부는 마약 카르텔 단속을 강화하고 있음.",
+        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006792345"
       }
     ]).slice(0, 3);
 
@@ -242,8 +287,56 @@
       }
     }
 
-    // 퀴즈 첫 문제 표시
     document.getElementById("quiz-question").textContent = questions[0].q;
+
+    // 모달 열기/닫기
+    const newsModal = document.getElementById('news-modal');
+    const riskModal = document.getElementById('risk-modal');
+
+    document.getElementById('open-news-modal').addEventListener('click', (e) => {
+      e.preventDefault();
+      fillModalList('news-modal-list', newsList);
+      newsModal.style.display = 'block';
+      newsModal.setAttribute('aria-hidden', 'false');
+    });
+
+    document.getElementById('close-news-modal').addEventListener('click', () => {
+      newsModal.style.display = 'none';
+      newsModal.setAttribute('aria-hidden', 'true');
+    });
+
+    document.getElementById('open-risk-modal').addEventListener('click', (e) => {
+      e.preventDefault();
+      fillModalList('risk-modal-list', riskList);
+      riskModal.style.display = 'block';
+      riskModal.setAttribute('aria-hidden', 'false');
+    });
+
+    document.getElementById('close-risk-modal').addEventListener('click', () => {
+      riskModal.style.display = 'none';
+      riskModal.setAttribute('aria-hidden', 'true');
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target === newsModal) {
+        newsModal.style.display = 'none';
+        newsModal.setAttribute('aria-hidden', 'true');
+      }
+      if (event.target === riskModal) {
+        riskModal.style.display = 'none';
+        riskModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    function fillModalList(elementId, dataList) {
+      const ul = document.getElementById(elementId);
+      ul.innerHTML = '';
+      dataList.forEach(([title, link]) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+        ul.appendChild(li);
+      });
+    }
   </script>
 </body>
 </html>
