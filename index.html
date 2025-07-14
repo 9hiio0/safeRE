@@ -135,206 +135,209 @@
     </div>
   </div>
 
-  <script>
-    // 지도 초기화
-    var map = L.map('map').setView([20, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+<script>
+  // 지도 초기화
+  var map = L.map('map').setView([20, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
 
-    // 핀 데이터 30개
-    const pins = [
-      {name: "우크라이나", lat: 48.3794, lng: 31.1656, info: "러시아와 전쟁 중임. 민간인 피해 큼. 국제사회 중재 실패 중."},
-      {name: "멕시코", lat: 23.6345, lng: -102.5528, info: "마약 카르텔 활개 침. 군과 충돌 잦음. 관광지 인근도 위험함."},
-      {name: "브라질", lat: -14.2350, lng: -51.9253, info: "갱단 확장 중. 교도소 내부까지 통제 어려움. 총기범죄 증가함."},
-      {name: "이란", lat: 32.4279, lng: 53.6880, info: "내부 시위 지속됨. 인권 탄압 심각함. 언론통제 있음."},
-      {name: "아프가니스탄", lat: 33.9391, lng: 67.7100, info: "탈레반 정권 하 인권 박탈 중. 여성 교육 금지됨. 국제 지원 차단됨."},
-      {name: "필리핀", lat: 12.8797, lng: 121.774, info: "마약 단속 중 인권 문제 제기."},
-      {name: "프랑스", lat: 46.2276, lng: 2.2137, info: "반정부 시위 격화됨. 경찰 폭력 논란 있음. 관광객 불안 커짐."},
-      {name: "인도", lat: 20.5937, lng: 78.9629, info: "보이스피싱, 성범죄 심각함. 대응 체계 미흡함. 외국인도 피해자 됨."},
-      {name: "남아프리카공화국", lat: -30.5595, lng: 22.9375, info: "강도·살인 급증 중. 야간 외출 위험함. 경찰력 부족함."},
-      {name: "중국", lat: 35.8617, lng: 104.1954, info: "사이버 스파이 활동 활발함. 서방국가 해킹 지속. 감시 강화됨."},
-      {name: "터키", lat: 38.9637, lng: 35.2433, info: "테러 및 난민 문제 지속."},
-      {name: "베네수엘라", lat: 6.4238, lng: -66.5897, info: "경제 위기 속 범죄 증가."},
-      {name: "캐나다", lat: 56.1304, lng: -106.3468, info: "갱단 및 조직범죄 증가."},
-      {name: "미국", lat: 37.0902, lng: -95.7129, info: "총기 폭력과 보이스피싱 문제 심각."},
-      {name: "소말리아", lat: 5.1521, lng: 46.1996, info: "해적과 테러리스트 활동 빈번."},
-      {name: "이라크", lat: 33.2232, lng: 43.6793, info: "내전과 테러 위협 지속."},
-      {name: "콜롬비아", lat: 4.5709, lng: -74.2973, info: "마약 및 갱단 범죄 심각."},
-      {name: "나이지리아", lat: 9.0820, lng: 8.6753, info: "테러와 갱단 폭력 증가."},
-      {name: "에티오피아", lat: 9.1450, lng: 40.4897, info: "내전과 인도주의 위기 지속."},
-      {name: "파키스탄", lat: 30.3753, lng: 69.3451, info: "테러 위협과 정치 불안."},
-      {name: "베트남", lat: 14.0583, lng: 108.2772, info: "사이버 범죄 증가 우려."},
-      {name: "이집트", lat: 26.8206, lng: 30.8025, info: "테러 및 정치적 긴장 상태."},
-      {name: "스페인", lat: 40.4637, lng: -3.7492, info: "갱단 활동과 범죄 증가 조짐."},
-      {name: "영국", lat: 55.3781, lng: -3.4360, info: "도시 내 갱단 및 범죄 증가."},
-      {name: "일본", lat: 36.2048, lng: 138.2529, info: "조직범죄 야쿠자 영향력 존재."},
-      {name: "호주", lat: -25.2744, lng: 133.7751, info: "보이스피싱 및 사이버 범죄 문제."},
-      {name: "러시아", lat: 61.5240, lng: 105.3188, info: "군사 충돌과 내부 정치 불안."},
-      {name: "폴란드", lat: 51.9194, lng: 19.1451, info: "난민 문제와 국경 긴장."},
-      {name: "이탈리아", lat: 41.8719, lng: 12.5674, info: "마피아 및 갱단 범죄 심각."},
-      {name: "콜카타", lat: 22.5726, lng: 88.3639, info: "도시 범죄 및 부패 문제."}
-    ];
+  // 핀 데이터 (30개)
+  const pins = [
+    {name: "우크라이나", lat: 48.3794, lng: 31.1656, info: "러시아와 전쟁 중임. 민간인 피해 큼. 국제사회 중재 실패 중."},
+    {name: "멕시코", lat: 23.6345, lng: -102.5528, info: "마약 카르텔 활개 침. 군과 충돌 잦음. 관광지 인근도 위험함."},
+    {name: "브라질", lat: -14.2350, lng: -51.9253, info: "갱단 확장 중. 교도소 내부까지 통제 어려움. 총기범죄 증가함."},
+    {name: "이란", lat: 32.4279, lng: 53.6880, info: "내부 시위 지속됨. 인권 탄압 심각함. 언론통제 있음."},
+    {name: "아프가니스탄", lat: 33.9391, lng: 67.7100, info: "탈레반 정권 하 인권 박탈 중. 여성 교육 금지됨. 국제 지원 차단됨."},
+    {name: "필리핀", lat: 12.8797, lng: 121.774, info: "마약 단속 중 인권 문제 제기."},
+    {name: "프랑스", lat: 46.2276, lng: 2.2137, info: "반정부 시위 격화됨. 경찰 폭력 논란 있음. 관광객 불안 커짐."},
+    {name: "인도", lat: 20.5937, lng: 78.9629, info: "보이스피싱, 성범죄 심각함. 대응 체계 미흡함. 외국인도 피해자 됨."},
+    {name: "남아프리카공화국", lat: -30.5595, lng: 22.9375, info: "강도·살인 급증 중. 야간 외출 위험함. 경찰력 부족함."},
+    {name: "중국", lat: 35.8617, lng: 104.1954, info: "사이버 스파이 활동 활발함. 서방국가 해킹 지속. 감시 강화됨."},
+    {name: "터키", lat: 38.9637, lng: 35.2433, info: "테러 및 난민 문제 지속."},
+    {name: "베네수엘라", lat: 6.4238, lng: -66.5897, info: "경제 위기 속 범죄 증가."},
+    {name: "캐나다", lat: 56.1304, lng: -106.3468, info: "갱단 및 조직범죄 증가."},
+    {name: "미국", lat: 37.0902, lng: -95.7129, info: "총기 폭력과 보이스피싱 문제 심각."},
+    {name: "소말리아", lat: 5.1521, lng: 46.1996, info: "해적과 테러리스트 활동 빈번."},
+    {name: "이라크", lat: 33.2232, lng: 43.6793, info: "내전과 테러 위협 지속."},
+    {name: "콜롬비아", lat: 4.5709, lng: -74.2973, info: "마약 및 갱단 범죄 심각."},
+    {name: "나이지리아", lat: 9.0820, lng: 8.6753, info: "테러와 갱단 폭력 증가."},
+    {name: "에티오피아", lat: 9.1450, lng: 40.4897, info: "내전과 인도주의 위기 지속."},
+    {name: "파키스탄", lat: 30.3753, lng: 69.3451, info: "테러 위협과 정치 불안."},
+    {name: "베트남", lat: 14.0583, lng: 108.2772, info: "사이버 범죄 증가 우려."},
+    {name: "이집트", lat: 26.8206, lng: 30.8025, info: "테러 및 정치적 긴장 상태."},
+    {name: "스페인", lat: 40.4637, lng: -3.7492, info: "갱단 활동과 범죄 증가 조짐."},
+    {name: "영국", lat: 55.3781, lng: -3.4360, info: "도시 내 갱단 및 범죄 증가."},
+    {name: "일본", lat: 36.2048, lng: 138.2529, info: "조직범죄 야쿠자 영향력 존재."},
+    {name: "호주", lat: -25.2744, lng: 133.7751, info: "보이스피싱 및 사이버 범죄 문제."},
+    {name: "러시아", lat: 61.5240, lng: 105.3188, info: "군사 충돌과 내부 정치 불안."},
+    {name: "폴란드", lat: 51.9194, lng: 19.1451, info: "난민 문제와 국경 긴장."},
+    {name: "이탈리아", lat: 41.8719, lng: 12.5674, info: "마피아 및 갱단 범죄 심각."},
+    {name: "콜카타", lat: 22.5726, lng: 88.3639, info: "도시 범죄 및 부패 문제."}
+  ];
 
-    pins.forEach(p => {
-      L.marker([p.lat, p.lng])
-        .addTo(map)
-        .bindPopup("📍 <b>" + p.name + "</b><br>" + p.info);
+  pins.forEach(p => {
+    L.marker([p.lat, p.lng])
+      .addTo(map)
+      .bindPopup("📍 <b>" + p.name + "</b><br>" + p.info);
+  });
+
+  // 최신 뉴스 데이터 (2023년 이후, 네이버 뉴스 출처)
+  const newsList = [
+    ["우크라이나 전쟁 장기화, 평화 협상 난항", "https://n.news.naver.com/article/003/0011911481"],
+    ["미국 총기 사고 증가, 시민 불안 커져", "https://n.news.naver.com/article/015/0004853253"],
+    ["브라질 갱단 확장, 치안 위기 심각", "https://n.news.naver.com/article/437/0000339899"],
+    ["중국 사이버 공격 강화, 국제사회 경계", "https://n.news.naver.com/article/025/0003323203"],
+    ["필리핀 마약 단속과 인권 논란 계속", "https://n.news.naver.com/article/056/0011443526"],
+    ["아프가니스탄 여성 인권 탄압 심각", "https://n.news.naver.com/article/016/0002233456"],
+    ["러시아-우크라이나 접경지 충돌 심화", "https://n.news.naver.com/article/001/0014130131"],
+    ["멕시코 마약 카르텔 충돌 심각", "https://n.news.naver.com/article/421/0006863929"],
+    ["이란 대규모 시위 지속, 정부 압박 강화", "https://n.news.naver.com/article/020/0003457896"],
+    ["남아프리카공화국 강력범죄 급증", "https://n.news.naver.com/article/029/0002800057"]
+  ];
+
+  const riskList = [
+    ["프랑스 반정부 시위 격화, 치안 불안", "https://n.news.naver.com/article/022/0003842331"],
+    ["남아공 강력범죄 증가, 주민 불안", "https://n.news.naver.com/article/018/0005407654"],
+    ["멕시코 마약전쟁 계속, 피해 속출", "https://n.news.naver.com/article/057/0001770447"],
+    ["이란 내부 불만 폭발, 시위 격화", "https://n.news.naver.com/article/277/0005238161"],
+    ["인도 보이스피싱 급증, 경각심 필요", "https://n.news.naver.com/article/009/0005120992"],
+    ["러시아-우크라 접경 지역 긴장 고조", "https://n.news.naver.com/article/008/0004812079"]
+  ];
+
+  // 모달 요소
+  const newsModal = document.getElementById("news-modal");
+  const riskModal = document.getElementById("risk-modal");
+  const newsModalList = document.getElementById("news-modal-list");
+  const riskModalList = document.getElementById("risk-modal-list");
+
+  document.getElementById("open-news-modal").addEventListener("click", (e) => {
+    e.preventDefault();
+    newsModal.style.display = "block";
+    newsModal.setAttribute("aria-hidden", "false");
+    newsModalList.innerHTML = "";
+    newsList.forEach(([title, link]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+      newsModalList.appendChild(li);
+    });
+  });
+
+  document.getElementById("open-risk-modal").addEventListener("click", (e) => {
+    e.preventDefault();
+    riskModal.style.display = "block";
+    riskModal.setAttribute("aria-hidden", "false");
+    riskModalList.innerHTML = "";
+    riskList.forEach(([title, link]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+      riskModalList.appendChild(li);
+    });
+  });
+
+  // 모달 닫기
+  document.getElementById("close-news-modal").addEventListener("click", () => {
+    newsModal.style.display = "none";
+    newsModal.setAttribute("aria-hidden", "true");
+  });
+  document.getElementById("close-risk-modal").addEventListener("click", () => {
+    riskModal.style.display = "none";
+    riskModal.setAttribute("aria-hidden", "true");
+  });
+
+  // 모달 외부 클릭 시 닫기
+  window.onclick = function(event) {
+    if(event.target === newsModal) {
+      newsModal.style.display = "none";
+      newsModal.setAttribute("aria-hidden", "true");
+    }
+    if(event.target === riskModal) {
+      riskModal.style.display = "none";
+      riskModal.setAttribute("aria-hidden", "true");
+    }
+  };
+
+  // 뉴스 리스트 랜덤 업데이트
+  function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function updateNews() {
+    const newsEl = document.getElementById("news-list");
+    newsEl.innerHTML = "";
+    shuffle(newsList).slice(0,3).forEach(([title, link]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+      newsEl.appendChild(li);
     });
 
-    // 최신 뉴스 - 네이버 출처
-    const newsList = [
-      ["우크라이나 전쟁 2023년 최신 상황 업데이트", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011418747"],
-      ["미국 총기 폭력 문제 심각성 고조", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=081&aid=0003329997"],
-      ["브라질 갱단 세력 확장 및 대응 현황", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003736821"],
-      ["중국 사이버 스파이 활동과 국제 사회 반응", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=015&aid=0004803926"],
-      ["필리핀 마약 단속과 인권 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=032&aid=0003171505"],
-      ["아프가니스탄 탈레반 인권 탄압 심화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006405411"]
-    ];
+    const riskEl = document.getElementById("risk-list");
+    riskEl.innerHTML = "";
+    shuffle(riskList).slice(0,3).forEach(([title, link]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+      riskEl.appendChild(li);
+    });
+  }
 
-    const riskList = [
-      ["프랑스 반정부 시위 격화", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=056&aid=0011425674"],
-      ["남아프리카공화국 강력범죄 급증", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=031&aid=0000738504"],
-      ["멕시코 마약 카르텔과 정부 충돌", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=422&aid=0000569918"],
-      ["이란 국내 시위 및 불만 폭발", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006399223"],
-      ["인도 보이스피싱 피해 급증", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=018&aid=0005483486"],
-      ["러시아-우크라이나 국경 포격 사건", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003771234"],
-      ["터키 테러 및 난민 문제 지속", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014087890"],
-      ["캐나다 갱단 및 조직범죄 증가", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=001&aid=0014089900"],
-      ["미국 보이스피싱 및 총기 폭력 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=079&aid=0003780001"],
-      ["소말리아 해적과 테러리스트 문제", "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=021&aid=0002501266"]
-    ];
+  updateNews();
+  setInterval(updateNews, 15000);
 
-    function shuffle(arr) {
-      return arr.sort(() => Math.random() - 0.5);
+  // 퀴즈 문제 (3개)
+  const questions = shuffle([
+    {
+      q: "브라질의 범죄율은 낮아졌다. (O/X)",
+      correct: false,
+      correctText: "오답입니다. 브라질 갱단 범죄는 최근에도 증가하고 있습니다.",
+      explanation: "2023년 보도에 따르면 브라질 갱단은 여전히 범죄 활동을 활발히 벌이고 있습니다.",
+      link: "https://n.news.naver.com/article/437/0000339899"
+    },
+    {
+      q: "아프가니스탄은 여성 교육을 허용한다. (O/X)",
+      correct: false,
+      correctText: "오답입니다. 현재 아프가니스탄에서는 여성 교육이 크게 제한되어 있습니다.",
+      explanation: "2023년 인권 단체 보고서에 따르면 여성 교육은 탈레반 정권 하에서 금지되어 있습니다.",
+      link: "https://n.news.naver.com/article/016/0002233456"
+    },
+    {
+      q: "멕시코 마약 카르텔은 군과 충돌 중이다. (O/X)",
+      correct: true,
+      correctText: "정답입니다! 멕시코 군과 마약 카르텔 간 충돌이 계속되고 있습니다.",
+      explanation: "2023년 NPR 기사에 따르면 군과 카르텔의 무력 충돌이 빈번하게 일어나고 있습니다.",
+      link: "https://n.news.naver.com/article/421/0006863929"
+    }
+  ]).slice(0,3);
+
+  let current = 0;
+  let score = 0;
+
+  function submitAnswer(userAnswer) {
+    const result = document.getElementById("quiz-result");
+    const q = questions[current];
+    if(userAnswer === q.correct){
+      score++;
+      result.innerHTML = `<b>${q.correctText}</b><br>${q.explanation}<br><a href="${q.link}" target="_blank" rel="noopener noreferrer">관련 뉴스 보기</a>`;
+      result.style.color = "#00aa88";
+    } else {
+      result.innerHTML = `<b>오답입니다.</b><br>${q.explanation}<br><a href="${q.link}" target="_blank" rel="noopener noreferrer">관련 뉴스 보기</a>`;
+      result.style.color = "#cc3333";
     }
 
-    // 뉴스 업데이트
-    function updateNews() {
-      const newsEl = document.getElementById("news-list");
-      newsEl.innerHTML = "";
-      shuffle(newsList).slice(0, 3).forEach(([title, link]) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-        newsEl.appendChild(li);
-      });
-
-      const riskEl = document.getElementById("risk-list");
-      riskEl.innerHTML = "";
-      shuffle(riskList).slice(0, 3).forEach(([title, link]) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-        riskEl.appendChild(li);
-      });
+    current++;
+    if(current < questions.length){
+      setTimeout(() => {
+        result.innerHTML = "";
+        document.getElementById("quiz-question").textContent = questions[current].q;
+      }, 3000);
+    } else {
+      setTimeout(() => {
+        document.getElementById("quiz-section").innerHTML = `<h3>퀴즈 완료!</h3><p>점수: ${score}/${questions.length}</p>`;
+      }, 4000);
     }
+  }
 
-    updateNews();
-    setInterval(updateNews, 15000);
-
-    // 퀴즈 문제 3개 (O/X)
-    const questions = shuffle([
-      {
-        q: "브라질의 범죄율은 낮아졌다. (O/X)",
-        correct: false,
-        correctText: "정답은 X! 브라질 갱단 범죄율은 상승 중임.",
-        explanation: "브라질 갱단은 교도소 내부까지 확장하며 총기 사용도 증가함.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=022&aid=0003736821"
-      },
-      {
-        q: "아프가니스탄은 여성 교육을 허용한다. (O/X)",
-        correct: false,
-        correctText: "정답은 X! 여성 교육은 제한되고 있음.",
-        explanation: "탈레반 정권 이후 여성 교육이 금지되어 국제적으로 비난받고 있음.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=421&aid=0006405411"
-      },
-      {
-        q: "멕시코 마약 카르텔은 군과 충돌 중이다. (O/X)",
-        correct: true,
-        correctText: "정답은 O! 마약 조직과 군 간 충돌이 계속됨.",
-        explanation: "멕시코 정부는 마약 카르텔 단속을 강화하고 있음.",
-        link: "https://news.naver.com/main/read.naver?mode=LSD&mid=sec&oid=422&aid=0000569918"
-      }
-    ]).slice(0, 3);
-
-    let current = 0;
-    let score = 0;
-
-    function submitAnswer(userAnswer) {
-      const result = document.getElementById("quiz-result");
-      const q = questions[current];
-      if (userAnswer === q.correct) {
-        score++;
-        result.innerHTML = `<b>${q.correctText}</b><br>${q.explanation}<br><a href="${q.link}" target="_blank" rel="noopener noreferrer">관련 뉴스 보기</a>`;
-        result.style.color = "#00aa88";
-      } else {
-        result.innerHTML = `<b>오답입니다.</b><br>${q.explanation}<br><a href="${q.link}" target="_blank" rel="noopener noreferrer">관련 뉴스 보기</a>`;
-        result.style.color = "#cc3333";
-      }
-
-      current++;
-      if (current < questions.length) {
-        setTimeout(() => {
-          result.innerHTML = "";
-          document.getElementById("quiz-question").textContent = questions[current].q;
-        }, 3000);
-      } else {
-        setTimeout(() => {
-          document.getElementById("quiz-section").innerHTML = `<h3>퀴즈 완료!</h3><p>점수: ${score} / ${questions.length}</p>`;
-        }, 4000);
-      }
-    }
-
-    document.getElementById("quiz-question").textContent = questions[0].q;
-
-    // 모달 열기/닫기 기능
-    const newsModal = document.getElementById('news-modal');
-    const riskModal = document.getElementById('risk-modal');
-
-    document.getElementById('open-news-modal').addEventListener('click', (e) => {
-      e.preventDefault();
-      fillModalList('news-modal-list', newsList);
-      newsModal.style.display = 'block';
-      newsModal.setAttribute('aria-hidden', 'false');
-    });
-
-    document.getElementById('close-news-modal').addEventListener('click', () => {
-      newsModal.style.display = 'none';
-      newsModal.setAttribute('aria-hidden', 'true');
-    });
-
-    document.getElementById('open-risk-modal').addEventListener('click', (e) => {
-      e.preventDefault();
-      fillModalList('risk-modal-list', riskList);
-      riskModal.style.display = 'block';
-      riskModal.setAttribute('aria-hidden', 'false');
-    });
-
-    document.getElementById('close-risk-modal').addEventListener('click', () => {
-      riskModal.style.display = 'none';
-      riskModal.setAttribute('aria-hidden', 'true');
-    });
-
-    window.addEventListener('click', (event) => {
-      if (event.target === newsModal) {
-        newsModal.style.display = 'none';
-        newsModal.setAttribute('aria-hidden', 'true');
-      }
-      if (event.target === riskModal) {
-        riskModal.style.display = 'none';
-        riskModal.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    function fillModalList(elementId, dataList) {
-      const ul = document.getElementById(elementId);
-      ul.innerHTML = '';
-      dataList.forEach(([title, link]) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-        ul.appendChild(li);
-      });
-    }
-  </script>
+  document.getElementById("quiz-question").textContent = questions[0].q;
+</script>
 </body>
 </html>
