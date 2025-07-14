@@ -13,7 +13,7 @@
       background-color: #001f3f;
       padding: 20px;
     }
-    #map { height: 500px; }
+    #map { height: 600px; }
     h1, h2, h3 {
       margin: 16px;
     }
@@ -42,6 +42,10 @@
       color: black;
       text-decoration: underline;
     }
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
@@ -55,24 +59,16 @@
 
   <div class="info-card">
     <h2>현 국제 범죄 및 분쟁 현황</h2>
-    <ul>
-      <li><a href="https://example.com/news1" target="_blank">아프가니스탄 분쟁 격화 - 주요 뉴스 요약</a></li>
-      <li><a href="https://example.com/news2" target="_blank">시리아 내전 현황 - 최신 소식</a></li>
-      <li><a href="https://example.com/news3" target="_blank">우크라이나 긴장 상황 - 국제 분석</a></li>
-    </ul>
+    <ul id="news-list"><li>뉴스 로딩 중...</li></ul>
   </div>
 
   <div class="info-card">
     <h2>주요 국가 별 위험 상황</h2>
-    <ul>
-      <li><a href="https://example.com/news4" target="_blank">나이지리아 테러 위험 - 현황 요약</a></li>
-      <li><a href="https://example.com/news5" target="_blank">이란과 중동 정세 - 핵심 내용</a></li>
-      <li><a href="https://example.com/news6" target="_blank">에티오피아 내전 진행 상황</a></li>
-    </ul>
+    <ul id="risk-list"><li>데이터 로딩 중...</li></ul>
   </div>
 
   <div class="quiz-card" id="quiz-section">
-    <h3 id="quiz-question">문제 1: 시리아는 현재 휴전 상태이다. (O/X)</h3>
+    <h3 id="quiz-question">퀴즈가 곧 시작됩니다!</h3>
     <button onclick="submitAnswer(true)">O</button>
     <button onclick="submitAnswer(false)">X</button>
     <p id="quiz-result"></p>
@@ -86,16 +82,10 @@
     }).addTo(map);
 
     var dangerCountries = [
-      { name: "아프가니스탄", lat: 33.9391, lng: 67.7100, info: "탈레반 재집권 이후 여성 인권 침해 심각함. 테러 발생 빈번하고 치안 불안정함. 국제 지원 절실함." },
-      { name: "수단", lat: 15.1521, lng: 46.1996, info: "2023년 내전 격화로 민간인 피해 큼. 수도 포함 주요 지역 무력 충돌 지속됨. 인도적 개입 필요함." },
-      { name: "시리아", lat: 34.8021, lng: 38.9968, info: "내전 10년 넘게 지속 중. 정부군·반군 충돌로 민간인 피해 큼. 재건 및 구호 절실함." },
-      { name: "예멘", lat: 23.6345, lng: -102.5528, info: "분쟁 장기화로 기본 생존 환경 붕괴됨. 아동·여성 피해 특히 심각함. 즉각적 국제 대응 필요함." },
-      { name: "말리", lat: 6.0770, lng: 31.3070, info: "무장 세력 활동 증가함. 민간 대상 공격 자주 발생함. 국제 안보 협력 요구됨." },
-      { name: "에티오피아", lat: 15.5527, lng: 48.5164, info: "티그라이 분쟁 전국으로 확산됨. 사상자 및 이재민 다수 발생함. 구호 활동 시급함." },
-      { name: "우크라이나", lat: 48.3794, lng: 31.1656, info: "러시아 침공 이후 전면전 지속 중. 민간 피해와 도시 파괴 심각함. 외부 지원 절실함." },
-      { name: "이란", lat: 32.4279, lng: 43.0793, info: "핵 개발 및 정치적 억압 지속됨. 시위 및 인권 침해 문제 큼. 국제 감시 필요함." },
-      { name: "니제르", lat: 17.6078, lng: 8.0817, info: "쿠데타 이후 정세 불안정함. 무장 단체 활동 확대 중. 안정화 위한 지원 필요함." },
-      { name: "나이지리아", lat: 9.0820, lng: 8.6753, info: "극단주의 세력 테러 잦음. 학교·종교시설 공격 빈번함. 시민 보호 대책 필요함." }
+      { name: "미국", lat: 37.0902, lng: -95.7129, info: "총기 사고 빈번함. 사망자 수 지속 증가 중. 정부 대책 절실함." },
+      { name: "브라질", lat: -14.2350, lng: -51.9253, info: "갱단 활동 활발함. 치안 불안정 심각. 시민 안전 보장 필요함." },
+      { name: "러시아-우크라이나", lat: 48.3794, lng: 31.1656, info: "전쟁 장기화됨. 민간 피해 크고 사회 기반 붕괴 중. 국제 평화 중재 필요함." },
+      { name: "남아프리카공화국", lat: -30.5595, lng: 22.9375, info: "강력 범죄 잦음. 강도, 살인 등 높은 수준. 치안 강화가 시급함." }
     ];
 
     dangerCountries.forEach(function(country) {
@@ -104,57 +94,96 @@
         .bindPopup("📍 <b>" + country.name + "</b><br>" + country.info);
     });
 
-    const questions = [
+    const newsItems = [
+      '<a href="#">우크라이나 전쟁 지속 중 - 민간 피해 심각</a>',
+      '<a href="#">브라질 갱단 활동 증가 - 시민 불안 고조</a>',
+      '<a href="#">멕시코 마약 카르텔 분쟁 격화</a>',
+      '<a href="#">미국 총기 사고 급증 - 규제 필요성 대두</a>',
+      '<a href="#">인도 보이스피싱 피해자 다수 발생</a>',
+      '<a href="#">러시아 해커들, 글로벌 사이버 공격</a>'
+    ];
+
+    const riskItems = [
+      '<a href="#">나이지리아 테러 위험 지속</a>',
+      '<a href="#">프랑스 테러 경계 수준 강화</a>',
+      '<a href="#">남아공 강력 범죄 발생률 증가</a>',
+      '<a href="#">호주 인신매매 조직 적발</a>'
+    ];
+
+    function rotateContent(listId, items) {
+      let index = 0;
+      const element = document.getElementById(listId);
+      setInterval(() => {
+        const newList = "<li>" + items[index % items.length] + "</li>";
+        element.innerHTML = newList;
+        index++;
+      }, 15000);
+    }
+
+    rotateContent("news-list", newsItems);
+    rotateContent("risk-list", riskItems);
+
+    const allQuestions = [
       {
-        q: "문제 1: 시리아는 현재 휴전 상태이다. (O/X)",
-        correct: false,
-        correctText: "정답입니다! 시리아는 여전히 분쟁 중입니다.",
-        wrongText: "오답입니다. 시리아는 아직 휴전하지 않았습니다."
+        q: "미국은 총기 사고가 많다. (O/X)", correct: true,
+        correctText: "맞음! 총기 규제 논쟁 지속됨.",
+        wrongText: "틀림! 실제로 매년 수천 명 사망함.",
+        explanation: "총기 사건은 매년 수천 건 이상. 예: 라스베이거스 총기 난사 사건(2017).",
+        link: "https://en.wikipedia.org/wiki/2017_Las_Vegas_shooting"
       },
       {
-        q: "문제 2: 우크라이나는 현재 전쟁 중이다. (O/X)",
-        correct: true,
-        correctText: "정답입니다! 현재 우크라이나는 전쟁 중입니다.",
-        wrongText: "오답입니다. 우크라이나는 아직 전쟁 중입니다."
+        q: "브라질은 갱단 활동이 없다. (O/X)", correct: false,
+        correctText: "맞음! 갱단 존재함.",
+        wrongText: "틀림! 거대 갱단 PCC 존재. 폭력 문제 지속.",
+        explanation: "PCC 등 조직이 마약 거래, 폭력 주도. 도시 치안 악화 중.",
+        link: "https://en.wikipedia.org/wiki/Primeiro_Comando_da_Capital"
       },
       {
-        q: "문제 3: 나이지리아는 테러 위험 지역이다. (O/X)",
-        correct: true,
-        correctText: "정답입니다! 나이지리아는 테러 위험이 존재합니다.",
-        wrongText: "오답입니다. 나이지리아는 여전히 위험 지역입니다."
+        q: "러시아와 우크라이나는 평화 협정을 체결했다. (O/X)", correct: false,
+        correctText: "맞음! 전쟁은 여전히 진행 중.",
+        wrongText: "틀림! 현재도 전쟁 중이며 협정 없음.",
+        explanation: "2022년부터 시작된 전쟁. 민간 피해 커짐.",
+        link: "https://en.wikipedia.org/wiki/Russian_invasion_of_Ukraine"
       }
     ];
 
+    function getRandomQuestions(arr, num) {
+      const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    }
+
+    let quizQuestions = getRandomQuestions(allQuestions, 3);
     let current = 0;
     let score = 0;
 
+    window.onload = () => {
+      document.getElementById("quiz-question").textContent = quizQuestions[0].q;
+    };
+
     function submitAnswer(userAnswer) {
       const result = document.getElementById("quiz-result");
-      const q = questions[current];
+      const q = quizQuestions[current];
       if (userAnswer === q.correct) {
         score++;
-        result.textContent = q.correctText;
+        result.innerHTML = q.correctText + "<br><small>" + q.explanation + "</small>";
         result.style.color = "#00cc88";
       } else {
-        result.textContent = q.wrongText;
+        result.innerHTML = q.wrongText + "<br><a href='" + q.link + "' target='_blank'>자세히 보기</a><br><small>" + q.explanation + "</small>";
         result.style.color = "#ff4444";
       }
 
       current++;
-      if (current < questions.length) {
+      if (current < quizQuestions.length) {
         setTimeout(() => {
-          result.textContent = "";
-          document.getElementById("quiz-question").textContent = questions[current].q;
-        }, 1500);
+          result.innerHTML = "";
+          document.getElementById("quiz-question").textContent = quizQuestions[current].q;
+        }, 2500);
       } else {
         setTimeout(() => {
-          let comment = "";
-          if (score === 3) comment = "축하합니다!";
-          else if (score === 2) comment = "잘했어요!";
-          else comment = "더 알아볼까요?";
+          let comment = score === quizQuestions.length ? "완벽해요!" : score >= 2 ? "잘했어요!" : "더 알아봐요!";
           document.getElementById("quiz-section").innerHTML =
-            "<h3>퀴즈 완료!</h3><p>총 점수: " + score + " / 3점</p><p>" + comment + "</p>";
-        }, 2000);
+            `<h3>퀴즈 완료!</h3><p>총 점수: ${score} / ${quizQuestions.length}점</p><p>${comment}</p>`;
+        }, 3000);
       }
     }
   </script>
